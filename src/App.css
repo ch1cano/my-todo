@@ -1,38 +1,72 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.wrapper {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  min-width: 100vh;
+  width: 100%;
+  height: 100vh;
+  background: #222222;
+}
+
+.input {
+  height: 40px;
+  width: 250px;
+  border: none;
+  border-bottom: 1px solid whitesmoke;
+  background: none;
   color: white;
+  padding: 0 10px;
+  outline: none;
 }
 
-.App-link {
-  color: #61dafb;
+.enter {
+  width: 100px;
+  height: 30px;
+  font-size: 13px;
+  background: none;
+  border: 1px solid whitesmoke;
+  color: whitesmoke;
+  margin-left: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.enter:hover {
+  background: whitesmoke;
+  color: #222222;
+  cursor: pointer;
+}
+
+.todo__item {
+  position: absolute;
+  cursor: move;
+  min-width: 215px;
+  color: #222222;
+  padding: 1em;
+  border-radius: 5px;
+}
+
+.dalate {
+  position: absolute;
+  right: 5px;
+  top: 1px;
+  background: none;
+  border: none;
+}
+
+
+.dalate:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.edit {
+  position: absolute;
+  right: 5px;
+  top: 25px;
+  background: none;
+  border: none;
+}
+
+.edit:hover {
+  color: rgb(255, 0, 247);
+  cursor: pointer;
 }
