@@ -2,105 +2,127 @@ import React, { useState, useEffect } from "react";
 import { v4 } from "uuid";
 import randomColor from "randomcolor";
 import Draggable from "react-draggable";
-import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from "@mui/icons-material/Close";
+import EditIcon from "@mui/icons-material/Edit";
 import "./App.css";
 
+const noteDefaultPosition = {
+  x: 500,
+  y: -500,
+};
 
 const App = () => {
-  const [item, setItem] = useState("");
-  const itemFromStorage = JSON.parse(localStorage.getItem("items"));
-  const [items, setItems] = useState(itemFromStorage || []);
-
+  const [note, setNote] = useState("");
   const [isEdit, setIsEdit] = useState(false);
+  const [editableNote, setEditableNote] = useState({});
+
+  const storageData = JSON.parse(localStorage.getItem("noteList"));
+
+  const [noteList, setNoteList] = useState(storageData || []);
+
+  const [updatedData, setUpdatedData] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("items", JSON.stringify(items));
-  }, [items]);
+    localStorage.setItem("noteList", JSON.stringify(noteList));
+  }, [noteList]);
 
-  const newItem = () => {
-    if (item.trim() !== "") {
-      const newItem = {
+  const handleCraeteNote = () => {
+    if (note.trim() !== "") {
+      const newNoteValues = {
         id: v4(),
-        item,
-        color: randomColor({
-        luminosity: "light",
-        }),
-        defaultPos: {
-          x: 500,
-          y: -500,
-        },
+        color: randomColor({ luminosity: "light" }),
+        defaultPos: { ...noteDefaultPosition },
+        note,
       };
-      setItems((item) => [...item, newItem]);
-      setItem("");
+      setNoteList((note) => [...note, newNoteValues]);
+      setNote("");
     } else {
       alert("Enter something...");
-      setItem("");
+      setNote("");
     }
   };
 
-  const deleteNode = (id) => {
-    setItems(items.filter((item) => item.id !== id));
+  const handleDeleteNode = (id) => {
+    setNoteList(noteList.filter((item) => item.id !== id));
   };
 
-  const updatePosision = (data, index) => {
-    let newArray = [...items];
-    newArray[index].defaultPos = { x: data.x, y: data.y };
-    setItems(newArray);
+  const handleUpdateNotePosition = (data, index) => {
+    let newNoteArr = [...noteList];
+
+    newNoteArr[index].defaultPos = { x: data.x, y: data.y };
+    setNoteList(newNoteArr);
   };
 
-  const keyPress = (e) => {
-    const code = e.keyCode || e.which;
-    if (code === 13) {
-      newItem();
-    }
+  const keyPress = (event) => {
+    const code = event.keyCode || event.which;
+
+    if (code === 13) handleCraeteNote();
   };
 
-  const editNode = () => {
-    return(
-      console.log()
-    )
-  }
+  const handleEditableNote = (id) => {
+    setIsEdit(true);
+    const foundNote = noteList.find((item) => item?.id === id);
+
+    foundNote && setEditableNote(foundNote);
+  };
+
+  const editSubmit = () => {
+    setIsEdit((prev) => !prev);
+    const test = { note: "test1234" };
+
+    Object.keys(test).forEach((key) => {
+      console.log("storageData[key]", storageData[key]);
+      storageData[key] = test[key];
+    });
+  };
+
+  console.log("storageData", storageData);
 
   return (
     <div className="app">
       <div className="wrapper">
-        <input 
-        value={item} 
-        type="text" 
-        placeholder="Enter something..." 
-        onChange={(e) => setItem(e.target.value)} 
-        onKeyPress={(e) => keyPress(e)} 
+        <div className="data">
+        <label for="date">Date</label>
+            <input type="date" id="date"/>
+        </div>
+        <input
+          value={note}
+          type="text"
+          placeholder="Enter something..."
+          onChange={(e) => setNote(e.target.value)}
+          onKeyPress={(e) => keyPress(e)}
         />
-        <button 
-        className="enter"
-        onClick={newItem}>
+        <button className="enter" onClick={handleCraeteNote}>
           ENTER
         </button>
       </div>
-      {items.map((item, index) => {
+      {noteList.map(({ id, note, defaultPos, color }, index) => {
         return (
           <Draggable
             key={index}
-            defaultPosition={item.defaultPos}
+            defaultPosition={defaultPos}
             onStop={(_, data) => {
-              updatePosision(data, index);
+              handleUpdateNotePosition(data, index);
             }}
           >
-            <div className="todo__item" 
-              style={{ backgroundColor: item.color }}>
-                { !isEdit && `${item.item}`}
-                { isEdit && 'test'}
-                <div className="item__control">
-                  <button className="dalate" 
-                    onClick={() => deleteNode(item.id)}>
-                    <CloseIcon/>
-                  </button >
-                  <button className="edit" 
-                  onClick={() => setIsEdit(true)}>
-                    <EditIcon/>
-                  </button>
-                </div>
+            <div className="todo__item" style={{ backgroundColor: color }}>
+              {isEdit && editableNote.id === id ? (
+                <>
+                  <input type="text" onChange={(e) => setNote(e.target.value)} placeholder="Edit field" />
+                  <button onClick={() => editSubmit()}>ok</button>
+                </>
+              ) : (
+                `${note}`
+              )}
+
+              <div className="item__control">
+                <button className="dalate" onClick={() => handleDeleteNode(id)}>
+                  <CloseIcon />
+                </button>
+                <button className="edit" onClick={() => handleEditableNote(id)}>
+                  <EditIcon />
+                </button>
+              </div>
             </div>
           </Draggable>
         );
