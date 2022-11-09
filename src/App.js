@@ -20,7 +20,7 @@ const App = () => {
 
   const [noteList, setNoteList] = useState(storageData || []);
 
-  const [updatedData, setUpdatedData] = useState("");
+  // const [updatedData, setUpdatedData] = useState("");
 
   useEffect(() => {
     localStorage.setItem("noteList", JSON.stringify(noteList));
@@ -56,7 +56,7 @@ const App = () => {
   const keyPress = (event) => {
     const code = event.keyCode || event.which;
 
-    if (code === 13) handleCraeteNote();
+    if (code === 13) handleCraeteNote(); // проаисываем подтверждение на кнопку Enter
   };
 
   const handleEditableNote = (id) => {
@@ -86,9 +86,10 @@ const App = () => {
             <input type="date" id="date"/>
         </div>
         <input
+          className="input_todo"
           value={note}
           type="text"
-          placeholder="Enter something..."
+          placeholder="Create todo..."
           onChange={(e) => setNote(e.target.value)}
           onKeyPress={(e) => keyPress(e)}
         />
