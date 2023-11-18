@@ -4,11 +4,12 @@ import randomColor from "randomcolor";
 import Draggable from "react-draggable";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
+import GetDataNow from "./components/GetDataNow/GetDataNow";
 import "./App.css";
 
 const noteDefaultPosition = {
-  x: 500,
-  y: -500,
+  x: 30,
+  y: 80,
 };
 
 const App = () => {
@@ -20,7 +21,7 @@ const App = () => {
 
   const [noteList, setNoteList] = useState(storageData || []);
 
-  // const [updatedData, setUpdatedData] = useState("");
+  // const [updateData, setUpdateData] = useState(false)
 
   useEffect(() => {
     localStorage.setItem("noteList", JSON.stringify(noteList));
@@ -79,55 +80,65 @@ const App = () => {
   console.log("storageData", storageData);
 
   return (
-    <div className="app">
+    <div>
       <div className="wrapper">
-        <div className="data">
-        <label for="date">Date</label>
-            <input type="date" id="date"/>
+        <div className="title">
+          <h1>My To Do</h1>
         </div>
-        <input
-          className="input_todo"
-          value={note}
-          type="text"
-          placeholder="Create todo..."
-          onChange={(e) => setNote(e.target.value)}
-          onKeyPress={(e) => keyPress(e)}
-        />
-        <button className="enter" onClick={handleCraeteNote}>
-          ENTER
-        </button>
-      </div>
-      {noteList.map(({ id, note, defaultPos, color }, index) => {
-        return (
-          <Draggable
-            key={index}
-            defaultPosition={defaultPos}
-            onStop={(_, data) => {
-              handleUpdateNotePosition(data, index);
-            }}
-          >
-            <div className="todo__item" style={{ backgroundColor: color }}>
-              {isEdit && editableNote.id === id ? (
-                <>
-                  <input type="text" onChange={(e) => setNote(e.target.value)} placeholder="Edit field" />
-                  <button onClick={() => editSubmit()}>ok</button>
-                </>
-              ) : (
-                `${note}`
-              )}
+        <div className="main_box">
+          <GetDataNow />
+          <input
+            className="input_todo"
+            value={note}
+            type="text"
+            placeholder="Create todo..."
+            onChange={(e) => setNote(e.target.value)}
+            onKeyPress={(e) => keyPress(e)}
+          />
+          <button className="enter" onClick={handleCraeteNote}>
+            ENTER
+          </button>
 
-              <div className="item__control">
-                <button className="dalate" onClick={() => handleDeleteNode(id)}>
-                  <CloseIcon />
-                </button>
-                <button className="edit" onClick={() => handleEditableNote(id)}>
-                  <EditIcon />
-                </button>
-              </div>
-            </div>
-          </Draggable>
-        );
-      })}
+          {noteList.map(({ id, note, defaultPos, color }, index) => {
+            return (
+              <Draggable
+                key={index}
+                defaultPosition={defaultPos}
+                onStop={(_, data) => {
+                  handleUpdateNotePosition(data, index);
+                }}>
+                <div className="todo__item" style={{ backgroundColor: color }}>
+                  {isEdit && editableNote.id === id ? (
+                    <>
+                      <input
+                        type="text"
+                        onChange={(e) => setNote(e.target.value)}
+                        placeholder="Edit field"
+                      />
+                      <button onClick={() => editSubmit()}>ok</button>
+                    </>
+                  ) : (
+                    `${note}`
+                  )}
+
+                  <div className="item__control">
+                    <button
+                      className="dalate"
+                      onClick={() => handleDeleteNode(id)}>
+                      <CloseIcon />
+                    </button>
+                    <button
+                      className="edit"
+                      onClick={() => handleEditableNote(id)}>
+                      <EditIcon />
+                    </button>
+                  </div>
+                </div>
+              </Draggable>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

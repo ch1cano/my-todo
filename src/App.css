@@ -1,5 +1,6 @@
 .wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-width: 100vh;
@@ -8,9 +9,11 @@
   background: #222222;
 }
 
+.title {
+  color: rgb(81, 191, 81);
+}
+
 .data {
-  position: absolute;
-  right: 65%;
   display: flex;
   color: white;
   font-size: 20px;
@@ -47,13 +50,17 @@
   border: 1px solid whitesmoke;
   color: whitesmoke;
   margin-left: 10px;
+  transition: 0.25s;
 }
 
 .enter:hover {
-  background: whitesmoke;
+  background: rgb(81, 191, 81);
+  border: 1px solid rgb(81, 191, 81);
   color: #222222;
   cursor: pointer;
+  transition: 0.25s;
 }
+
 
 .todo__item {
   position: absolute;
